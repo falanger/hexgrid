@@ -3,22 +3,21 @@ package hexgrid
 import (
 	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHexAdd(t *testing.T) {
-
 	var testCases = []struct {
-		hexA     hex
-		hexB     hex
-		expected hex
+		hexA     Hex
+		hexB     Hex
+		expected Hex
 	}{
 		{NewHex(1, -3), NewHex(3, -7), NewHex(4, -10)},
 	}
 
 	for _, tt := range testCases {
-
-		actual := HexAdd(tt.hexA, tt.hexB)
-
+		actual := tt.hexA.Add(tt.hexB)
 		if actual != tt.expected {
 			t.Error("Expected:", tt.expected, "got:", actual)
 		}
@@ -26,18 +25,16 @@ func TestHexAdd(t *testing.T) {
 }
 
 func TestHexSubtract(t *testing.T) {
-
 	var testCases = []struct {
-		hexA     hex
-		hexB     hex
-		expected hex
+		hexA     Hex
+		hexB     Hex
+		expected Hex
 	}{
 		{NewHex(1, -3), NewHex(3, -7), NewHex(-2, 4)},
 	}
 
 	for _, tt := range testCases {
-
-		actual := HexSubtract(tt.hexA, tt.hexB)
+		actual := tt.hexA.Subtract(tt.hexB)
 
 		if actual != tt.expected {
 			t.Error("Expected:", tt.expected, "got:", actual)
@@ -46,19 +43,17 @@ func TestHexSubtract(t *testing.T) {
 }
 
 func TestHexScale(t *testing.T) {
-
 	var testCases = []struct {
-		hexA     hex
+		hexA     Hex
 		factor   int
-		expected hex
+		expected Hex
 	}{
 		{NewHex(1, -3), 2, NewHex(2, -6)},
 		{NewHex(-2, 3), 2, NewHex(-4, 6)},
 	}
 
 	for _, tt := range testCases {
-
-		actual := HexScale(tt.hexA, tt.factor)
+		actual := tt.hexA.Scale(tt.factor)
 
 		if actual != tt.expected {
 			t.Error("Expected:", tt.expected, "got:", actual)
@@ -84,22 +79,21 @@ func TestHexScale(t *testing.T) {
 func TestHexNeighbor(t *testing.T) {
 
 	var testCases = []struct {
-		origin    hex
-		direction direction
-		expected  hex
+		origin    Hex
+		direction Direction
+		expected  Hex
 	}{
 
-		{NewHex(0, -1), directionSE, NewHex(1, -1)},
-		{NewHex(0, -1), directionNE, NewHex(1, -2)},
-		{NewHex(0, -1), directionN, NewHex(0, -2)},
-		{NewHex(0, -1), directionNW, NewHex(-1, -1)},
-		{NewHex(0, -1), directionSW, NewHex(-1, 0)},
-		{NewHex(0, -1), directionS, NewHex(0, 0)},
+		{NewHex(0, -1), DirectionSE, NewHex(1, -1)},
+		{NewHex(0, -1), DirectionNE, NewHex(1, -2)},
+		{NewHex(0, -1), DirectionN, NewHex(0, -2)},
+		{NewHex(0, -1), DirectionNW, NewHex(-1, -1)},
+		{NewHex(0, -1), DirectionSW, NewHex(-1, 0)},
+		{NewHex(0, -1), DirectionS, NewHex(0, 0)},
 	}
 
 	for _, tt := range testCases {
-
-		actual := HexNeighbor(tt.origin, tt.direction)
+		actual := tt.origin.Neighbor(tt.direction)
 
 		if actual != tt.expected {
 			t.Error("Expected:", tt.expected, "got:", actual)
@@ -128,10 +122,9 @@ func TestHexNeighbor(t *testing.T) {
 //         \ _ _ /
 
 func TestHexDistance(t *testing.T) {
-
 	var testCases = []struct {
-		origin      hex
-		destination hex
+		origin      Hex
+		destination Hex
 		expected    int
 	}{
 		{NewHex(-1, -1), NewHex(1, -1), 2},
@@ -142,8 +135,7 @@ func TestHexDistance(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
-
-		actual := HexDistance(tt.origin, tt.destination)
+		actual := tt.origin.DistanceTo(tt.destination)
 
 		if actual != tt.expected {
 			t.Error("Expected:", tt.expected, "got:", actual)
@@ -167,10 +159,9 @@ func TestHexDistance(t *testing.T) {
 // \       /     \       /     \       /     \       /
 //  \_____/       \_____/       \_____/       \_____/
 func TestHexLineDraw(t *testing.T) {
-
 	var testCases = []struct {
-		origin      hex
-		destination hex
+		origin      Hex
+		destination Hex
 		expected    string // the expected path serialized to string
 	}{
 		{NewHex(-3, -1), NewHex(3, -3), "[(-3,-1) (-2,-1) (-1,-2) (0,-2) (1,-2) (2,-3) (3,-3)]"},
@@ -179,8 +170,7 @@ func TestHexLineDraw(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
-
-		actual := fmt.Sprint(HexLineDraw(tt.origin, tt.destination))
+		actual := fmt.Sprint(tt.origin.LineDraw(tt.destination))
 
 		if actual != tt.expected {
 			t.Error("Expected:", tt.expected, "got:", actual)
@@ -211,7 +201,6 @@ func TestHexLineDraw(t *testing.T) {
 //               \       /
 //                \_____/
 func TestHexRange(t *testing.T) {
-
 	var testCases = []struct {
 		radius                   int
 		expectedNumberOfHexagons int
@@ -221,9 +210,10 @@ func TestHexRange(t *testing.T) {
 		{2, 19},
 	}
 
-	for _, tt := range testCases {
+	center := NewHex(1, -2)
 
-		actual := HexRange(NewHex(1, -2), tt.radius)
+	for _, tt := range testCases {
+		actual := center.Range(tt.radius)
 
 		if len(actual) != tt.expectedNumberOfHexagons {
 			t.Error("Expected:", tt.expectedNumberOfHexagons, "got:", len(actual))
@@ -243,13 +233,9 @@ func TestHexRange(t *testing.T) {
 //        \       /
 //         \ _ _ /
 func TestHexRectangle(t *testing.T) {
-
-	hexgrid := HexRectangleGrid(3, 2)
-
-	if len(hexgrid) != 6 {
-		t.Error("Expected: 6 got:", len(hexgrid))
-	}
-
+	hexgrid := RectangleGrid(3, 2)
+	expectHexes := 6
+	assert.Len(t, hexgrid, expectHexes)
 }
 
 //    _ _           _ _           _ _
@@ -276,7 +262,7 @@ func TestHexRectangle(t *testing.T) {
 // The hexagons marked with an X are non-visible. The remaining 16 are visible.
 func TestHexFieldOfView(t *testing.T) {
 
-	universe := []hex{
+	universe := []Hex{
 		NewHex(0, 0),
 		NewHex(0, 1),
 		NewHex(0, 2),
@@ -303,9 +289,10 @@ func TestHexFieldOfView(t *testing.T) {
 		NewHex(5, 1),
 	}
 
-	losBlockers := []hex{NewHex(2, 0), NewHex(3, 0)}
+	losBlockers := []Hex{NewHex(2, 0), NewHex(3, 0)}
 
-	actual := HexFieldOfView(NewHex(1, 1), universe, losBlockers)
+	point := NewHex(1, 1)
+	actual := point.FieldOfView(universe, losBlockers)
 
 	if len(actual) != 16 {
 		t.Error("Expected: 16 got:", len(actual))
@@ -317,9 +304,8 @@ func TestHexFieldOfView(t *testing.T) {
 ////////////////
 
 func BenchmarkHexDistance(b *testing.B) {
-
 	var testCases = []struct {
-		destination hex
+		destination Hex
 	}{
 		{NewHex(0, 0)},
 		{NewHex(100, 100)},
@@ -332,16 +318,15 @@ func BenchmarkHexDistance(b *testing.B) {
 
 		b.Run(fmt.Sprint(origin, ":", bm.destination), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
-				HexDistance(origin, bm.destination)
+				origin.DistanceTo(bm.destination)
 			}
 		})
 	}
 }
 
 func BenchmarkHexLineDraw(b *testing.B) {
-
 	var testCases = []struct {
-		destination hex
+		destination Hex
 	}{
 		{NewHex(0, 0)},
 		{NewHex(100, 100)},
@@ -349,19 +334,17 @@ func BenchmarkHexLineDraw(b *testing.B) {
 	}
 
 	for _, bm := range testCases {
-
 		origin := NewHex(0, 0)
 
 		b.Run(fmt.Sprint(origin, ":", bm.destination), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
-				HexLineDraw(origin, bm.destination)
+				origin.LineDraw(bm.destination)
 			}
 		})
 	}
 }
 
 func BenchmarkHexRange(b *testing.B) {
-
 	var testCases = []struct {
 		radius int
 	}{
@@ -376,15 +359,16 @@ func BenchmarkHexRange(b *testing.B) {
 
 		b.Run(fmt.Sprint(origin, ":", bm.radius), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
-				HexRange(NewHex(1, -2), bm.radius)
+				center := NewHex(1, -2)
+				center.Range(bm.radius)
 			}
 		})
 	}
 }
 
 func BenchmarkHexHasLineOfSight(b *testing.B) {
-
+	center := NewHex(1, 1)
 	for i := 0; i < b.N; i++ {
-		HexHasLineOfSight(NewHex(1, 1), NewHex(4, -1), []hex{NewHex(2, 0), NewHex(3, 0)})
+		center.HasLineOfSight(NewHex(4, -1), []Hex{NewHex(2, 0), NewHex(3, 0)})
 	}
 }
