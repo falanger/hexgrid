@@ -62,8 +62,8 @@ hex := PixelToHex(layout, point).Round()
 
 ## History
 
-0.2: Combining multiple forks
-0.1: First version
+ - 1.0.0: Combining multiple forks
+ - 0.1.0: First version
 
 ## Credits
 
