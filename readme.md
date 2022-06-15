@@ -1,17 +1,20 @@
 # Hexgrid
 
-This is a GO (Golang) library used to handle regular hexagons.
-It's based on the algorithms described at http://www.redblobgames.com/grids/hexagons/implementation.html
+This is a Go library used to handle regular hexagons.
+
+It's based on the algorithms described by [Amit Patel in his wonderful guide to
+hexagons](http://www.redblobgames.com/grids/hexagons/implementation.html) -- I
+highly recommend reading through that page.
 
 ## Installation
 
-    go get github.com/pmcxs/hexgrid
+    go get github.com/seanhagen/hexgrid@v1.0.0
 
 ## Usage
 #### Importing
 
 ```go
-import "github.com/pmcxs/hexgrid"
+import "github.com/seanhagen/hexgrid"
 ```
 
 ### Examples
@@ -61,22 +64,21 @@ point := point {10,20}
 hex := PixelToHex(layout, point).Round()
 ```
 
-## Contributing
-
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request
-
 ## History
 
 0.1. First version
 
 ## Credits
 
-* Pedro Sousa
-* Red Blob Games (http://www.redblobgames.com/grids/hexagons/implementation.html)
+* [Pedro Sousa](https://github.com/pmcxs), for the intial repo.
+* [Igor Shmulyan](https://github.com/ishmulyan), [Brendan Le
+  Glaunec](https://github.com/Ullaakut), [Sergey
+  Kolunov](https://github.com/Metaur),
+  [Puzzlemaker1](https://github.com/Puzzlemaker1), and [Patrick
+  Fay](https://github.com/tigger0jk) for their forks.
+* And of course [Amit Patel of Red Blob
+  Games](http://www.redblobgames.com/grids/hexagons/implementation.html),
+  without which we wouldn't have any of this.
 
 ## License
 
