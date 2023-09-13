@@ -10,7 +10,7 @@ highly recommend reading through that page.
 #### Importing
 
 ```go
-import "github.com/seanhagen/hexgrid"
+import "github.com/falanger/hexgrid"
 ```
 
 ### Examples
